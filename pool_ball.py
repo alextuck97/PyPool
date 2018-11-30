@@ -23,7 +23,8 @@ class PoolBall(pygame.sprite.Sprite):
         self.x = float(initial_pos[0])
         self.y = float(initial_pos[1])
        
-       
+        
+               
         #Keeps track of balls self has collided with in current frame
         #Used to prevent double updating
         self.prev_collisions = [None]
@@ -33,29 +34,50 @@ class PoolBall(pygame.sprite.Sprite):
         self.vel = initial_vel
         self.next_update_time = 0
         
+        #Points along the circumference of the ball at 45 degrees from center
+        self.top_left = pygame.Vector2(self.rect.centerx - (1 / math.sqrt(2)) * self.radius, self.rect.centery - (1 / math.sqrt(2)) * self.radius) 
+        self.bottom_left = pygame.Vector2(self.rect.centerx - (1 / math.sqrt(2)) * self.radius, self.rect.centery + (1 / math.sqrt(2)) * self.radius)
+        self.top_right = pygame.Vector2(self.rect.centerx + (1 / math.sqrt(2)) * self.radius, self.rect.centery - (1 / math.sqrt(2)) * self.radius)
+        self.bottom_right = pygame.Vector2(self.rect.centerx + (1 / math.sqrt(2)) * self.radius, self.rect.centery + (1 / math.sqrt(2)) * self.radius)
         
     @property
     def rect(self):
         return pygame.Rect(round(self.x), round(self.y), self.image.get_rect().width, self.image.get_rect().height)
         
     
-    def update(self, screen_size, current_time, group):#Screen size should be a rect
+    def __recalculate_corner_points(self):
+        '''
+        Called whenever the balls position is set. Else points are updated with velocity
+        '''
+        self.top_left = pygame.Vector2(self.rect.centerx - (1 / math.sqrt(2)) * self.radius, self.rect.centery - (1 / math.sqrt(2)) * self.radius) 
+        self.bottom_left = pygame.Vector2(self.rect.centerx - (1 / math.sqrt(2)) * self.radius, self.rect.centery + (1 / math.sqrt(2)) * self.radius)
+        self.top_right = pygame.Vector2(self.rect.centerx + (1 / math.sqrt(2)) * self.radius, self.rect.centery - (1 / math.sqrt(2)) * self.radius)
+        self.bottom_right = pygame.Vector2(self.rect.centerx + (1 / math.sqrt(2)) * self.radius, self.rect.centery + (1 / math.sqrt(2)) * self.radius)
+        
+    
+    def update(self, screen_size, current_time, group, table):#Screen size should be a rect
         if self.next_update_time < current_time:
             
             if self.y + 2*self.radius > screen_size.bottom : 
                 self.y = screen_size.bottom - 2*self.radius
+                
                 self.vel.y = -1 * self.vel.y
                 
             elif self.y < 0:
                 self.y = 0
-                self.vel.y = -1 * self.vel.y
                 
+                self.vel.y = -1 * self.vel.y
+            
+            self.bumper_collision(table)
+            
             if self.x < 0:
                 self.x = 0
+                
                 self.vel.x = -1 * self.vel.x
             
             elif self.x + 2*self.radius > screen_size.right:
                 self.x = screen_size.right - 2*self.radius
+                
                 self.vel.x = -1 * self.vel.x
             
             for ball in group.sprites():#Check collision between other balls
@@ -70,10 +92,13 @@ class PoolBall(pygame.sprite.Sprite):
                     collision_vector.scale_to_length(2 * self.radius)
                     ball.x = self.x - collision_vector.x
                     ball.y = self.y - collision_vector.y
-                        
+            
+                    
             
             self.y += self.vel.y
             self.x += self.vel.x
+            
+            self.__recalculate_corner_points()
             
             self.next_update_time += 10
         else:
@@ -129,7 +154,38 @@ class PoolBall(pygame.sprite.Sprite):
         
         return  pygame.math.Vector2(u_x1, u_y1),pygame.math.Vector2(u_x2, u_y2)
     
-    
+    def bumper_collision(self, table):
+        '''
+        Calculate new velocities after collision with a bumper
+        '''
+        bumpers = table.get_bumper_coords()
+        
+        center_ball = pygame.Vector2(self.rect.center)
+        
+        bumper = bumpers['l']
+        #Ball hit bumper when its in the shortest part of the bumper
+        if center_ball.x - self.radius < bumper[0][0] and (center_ball.y >= bumper[0][1] and center_ball.y + 2*self.radius <= bumper[1][1]):
+            self.vel.x = -1 * self.vel.x
+            self.x = bumper[0][0]
+        #Collision with upper angled bumper
+        elif (center_ball.y < bumper[0][1] and center_ball.y > bumper[3][1]) and (self.bottom_left.x - self.bottom_left.y + bumper[3][1]< 0): 
+                                                                                  #and self.bottom_left.y - self.bottom_left.x < bumper[0][1]):
+            self.vel.x = -1 * self.vel.x
+            #self.x = center_ball.y - center_ball.x
+            '''Add actual collision function'''
+        elif (center_ball.y > bumper[1][1] and center_ball.y < bumper[2][1]) and (self.top_left.y + self.top_left.x - bumper[2][1] < 0):
+                                                                                  #and self.top_left.y + self.top_left.x < bumper[2][1]):
+            self.vel.x = -1 * self.vel.x
+            #self.x = center_ball.y - center_ball.x
+            #self.x = self.top_left.x + (1 / math.sqrt(2)) * self.radius
+            #self.y = self.top_left.y + (1 / math.sqrt(2)) * self.radius
+            
+        
+        
+        
+        
+        
+        
     
 def ball_init(initial_pos = None):
     '''
