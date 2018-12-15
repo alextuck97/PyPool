@@ -164,24 +164,113 @@ class PoolBall(pygame.sprite.Sprite):
         
         bumper = bumpers['l']
         #Ball hit bumper when its in the shortest part of the bumper
-        if center_ball.x - self.radius < bumper[0][0] and (center_ball.y >= bumper[0][1] and center_ball.y + 2*self.radius <= bumper[1][1]):
+        self.__left_bumper_collision(bumper, center_ball)
+        
+        bumper = bumpers['r']
+        self.__right_bumper_collision(bumper, center_ball)
+        
+        for b in ['t1', 't2']:
+            bumper = bumpers[b]
+            self.__upper_bumper_collision(bumper, center_ball)
+            
+        for b in ['b1', 'b2']:
+            bumper = bumpers[b]
+            self.__lower_bumper_collision(bumper, center_ball)
+            
+    
+    def __left_bumper_collision(self, bumper, center_ball):
+        '''
+        Detect and handle collision with left bumper
+        '''
+        #Long edge collision
+        if center_ball.x - self.radius < bumper[0][0] and (center_ball.y >= bumper[0][1] and center_ball.y <= bumper[1][1]):
             self.vel.x = -1 * self.vel.x
             self.x = bumper[0][0]
         #Collision with upper angled bumper
         elif (center_ball.y < bumper[0][1] and center_ball.y > bumper[3][1]) and (self.bottom_left.x - self.bottom_left.y + bumper[3][1]< 0): 
-                                                                                  #and self.bottom_left.y - self.bottom_left.x < bumper[0][1]):
-            self.vel.x = -1 * self.vel.x
-            #self.x = center_ball.y - center_ball.x
-            '''Add actual collision function'''
-        elif (center_ball.y > bumper[1][1] and center_ball.y < bumper[2][1]) and (self.top_left.y + self.top_left.x - bumper[2][1] < 0):
-                                                                                  #and self.top_left.y + self.top_left.x < bumper[2][1]):
-            self.vel.x = -1 * self.vel.x
-            #self.x = center_ball.y - center_ball.x
-            #self.x = self.top_left.x + (1 / math.sqrt(2)) * self.radius
-            #self.y = self.top_left.y + (1 / math.sqrt(2)) * self.radius
+                                                                                  
+            self.vel.x, self.vel.y = self.__angle_bumper_collision(-45, self.vel)
+            #Reset x relative to where bottom_left is so x is outside the bumper line
+            self.x = self.bottom_left.y - bumper[3][1] + (1 / math.sqrt(2)) * self.radius - self.radius
             
+        elif (center_ball.y > bumper[1][1] and center_ball.y < bumper[2][1]) and (self.top_left.y + self.top_left.x - bumper[2][1] < 0):
+                                                                                  
+            self.vel.x, self.vel.y = self.__angle_bumper_collision(45, self.vel)
+            self.x = -1 * self.top_left.y + bumper[2][1] + (1 / math.sqrt(2)) * self.radius - self.radius
         
+    def __right_bumper_collision(self, bumper, center_ball):
+        '''
+        Detect and handle collision with right bumper 
+        '''
+        #Long edge collision
+        if center_ball.x + self.radius > bumper[0][0] and (center_ball.y >= bumper[0][1] and center_ball.y <= bumper[1][1]):
+            self.vel.x = -1 * self.vel.x
+            self.x = bumper[0][0] - 2*self.radius
+                                                                               
+                                                                                # y = -x + 466 is equation for upper bumper at default resolution
+                                                                                #466 = bumper[0][0] + bumper[0}[1]
+        elif (center_ball.y < bumper[0][1] and center_ball.y > bumper[3][1]) and (self.bottom_right.x + self.bottom_right.y - bumper[0][0] - bumper[0][1] > 0):
+            self.vel.x, self.vel.y = self.__angle_bumper_collision(45, self.vel)
+            self.x = - self.bottom_right.y + bumper[0][0] + bumper[0][1] - self.radius - (1 / math.sqrt(2)) * self.radius
+                                                                                  #y = x - 242 is equation for lower bumper at defult resolution
+                                                                                  #242 = bumper[2][0] - bumper[2][1]
+        elif(center_ball.y > bumper[1][1] and center_ball.y < bumper[2][1]) and (self.top_right.x - self.top_right.y - bumper[2][0] + bumper[2][1] > 0):
+            self.vel.x, self.vel.y = self.__angle_bumper_collision(-45, self.vel)
+            self.x = self.top_right.y + bumper[2][0] - bumper[2][1] - self.radius - (1 / math.sqrt(2)) * self.radius
+
+    def __upper_bumper_collision(self, bumper, center_ball):
+        '''
+        Detect and handle collision for upper bumper
+        '''
+        #Long edge collision
+        if center_ball.y - self.radius < bumper[0][1] and (center_ball.x >= bumper[0][0] and center_ball.x <= bumper[1][0]):
+            self.vel.y = -1 * self.vel.y
+            self.y = bumper[0][1]
+                                                                                 #Equation for angled line y = x - bumper[3][0]
+        elif (center_ball.x > bumper[3][0] and center_ball.x < bumper[0][0]) and (self.top_right.x - self.top_right.y - bumper[3][0] > 0):
+            self.vel.y = -1 * self.vel.y
+            self.y = self.top_right.x - bumper[3][0] + (1 / math.sqrt(2)) * self.radius - self.radius
+                                                                                     #y = -x + b[2][0]
+        elif (center_ball.x > bumper[1][0] and center_ball.x < bumper[2][0]) and (self.top_left.y + self.top_left.x - bumper[2][0] < 0):
+            self.vel.y = -1 * self.vel.y
+            self.y = bumper[2][0] - self.top_left.x + (1 / math.sqrt(2)) * self.radius - self.radius
+    
+    def __lower_bumper_collision(self, bumper, center_ball):
+        '''
+        Collision with lower bumpers
+        '''
         
+        if center_ball.y + self.radius > bumper[0][1] and (center_ball.x >= bumper[0][0] and center_ball.x <= bumper[1][0]):
+            self.vel.y = -1 * self.vel.y
+            self.y = bumper[0][1] - 2 * self.radius
+                                                                              #y = -x + b[3][0] + b[3][1]
+        elif (center_ball.x > bumper[3][0] and center_ball.x < bumper[0][0]) and (self.bottom_right.y + self.bottom_right.x - bumper[3][0] - bumper[3][1] > 0):
+            self.vel.y = -1 * self.vel.y
+            self.y = bumper[3][0] + bumper[3][1] - self.bottom_right.x - self.radius - (1 / math.sqrt(2)) * self.radius
+                                                                                #y = x + b[2][1] - b[2][0]
+        elif (center_ball.x > bumper[1][0] and center_ball.x < bumper[2][0]) and (self.bottom_left.y - self.bottom_left.x - bumper[2][1] + bumper[2][0] > 0):
+            self.vel.y = -1 * self.vel.y
+            self.y = self.bottom_left.x + bumper[2][1] - bumper[2][0] - self.radius - (1 / math.sqrt(2)) * self.radius
+            
+    def __angle_bumper_collision(self, theta, ball_vel):
+        '''
+        Calculate the balls velocity of collision with an angled bumper
+        Theta is the angle of rotation from the x-axis. An unrotated 
+        collision surface is the x-axis, where collisions come from
+        the positive y-direction.
+        '''
+        #Rotate the balls velocity by theta
+        vel_x_r = ball_vel.x * math.cos(theta) - ball_vel.y * math.sin(theta)
+        vel_y_r = ball_vel.x * math.sin(theta) + ball_vel.y * math.cos(theta)
+        
+        #Ball is bouncing off a 180 deg surface so only y velocity changes
+        new_vel_y_r = -1 * vel_y_r
+        
+        #Rotate the balls new velocity back to normal coordinates
+        new_vel_x = vel_x_r * math.cos(-1 * theta) - new_vel_y_r * math.sin(-1 * theta)
+        new_vel_y = vel_x_r * math.sin(-1 * theta) + new_vel_y_r * math.cos(-1 * theta)
+       
+        return new_vel_x, new_vel_y
         
         
         

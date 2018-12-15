@@ -10,10 +10,10 @@ class App:
         self._running = True
         self._display_surf = None
         self.size = self.width, self.height = 640, 400
-        self.ball1 = pool_ball.PoolBall([100,190], pygame.math.Vector2(-1,0))
-        self.ball2 = pool_ball.PoolBall([100,15], pygame.math.Vector2(-1,0))
-        self.ball3 = pool_ball.PoolBall([400,150], pygame.math.Vector2(-1,1))
-        self.ball4 = pool_ball.PoolBall([200,300], pygame.math.Vector2(2,2))
+        self.ball1 = pool_ball.PoolBall([415,100], pygame.math.Vector2(0,-0.5))
+        self.ball2 = pool_ball.PoolBall([200,100], pygame.math.Vector2(0,0.5))
+        self.ball3 = pool_ball.PoolBall([235,150], pygame.math.Vector2(2,-1))
+        self.ball4 = pool_ball.PoolBall([200,300], pygame.math.Vector2(1,2))
         #self.table = pygame.transform.scale(pygame.image.load("PoolTable.png"), (round(0.78125 * self.width), round(0.7225 * self.height)))#Table graphic 
         
         #self.ball_surf_w = round(0.7047* self.width)
@@ -26,7 +26,7 @@ class App:
         
         self.table = pool_table.PoolTable(self.ball_surf.get_rect())
         
-        self.balls = sp.Group(self.ball1, self.ball2, self.ball3, self.ball4)
+        self.balls = sp.Group(self.ball1, self.ball2)#, self.ball3, self.ball4)
        
         
         #self.table = sp.Group(pool_table.PoolTable())
