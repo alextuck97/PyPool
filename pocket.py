@@ -3,7 +3,7 @@ import pygame.sprite as sp
 import pygame
 
 class Pocket(sp.Sprite):
-    image = None
+    #image = None
     
     
     def __init__(self, pos, size):
@@ -13,8 +13,8 @@ class Pocket(sp.Sprite):
         
         
         BALL_IMG = pygame.Surface([2*self.radius,2*self.radius], pygame.SRCALPHA)
-        gfx.filled_circle(BALL_IMG, self.radius, self.radius, self.radius, (0,255,0))
-        Pocket.image = BALL_IMG
+        gfx.filled_circle(BALL_IMG, self.radius, self.radius, self.radius, (138,138,131))
+        #Pocket.image = BALL_IMG
             
         self.image = BALL_IMG
         

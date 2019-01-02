@@ -1,0 +1,6 @@
+Sink all of the balls to win.
+Use as few shots as you can to get as low of a score as possible.
+Sinking the cue ball incurs a penalty shot, and all balls sunk on that
+turn are placed back on the table.
+###
+43
