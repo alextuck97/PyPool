@@ -3,7 +3,8 @@ import pygame.mouse as ms
 import pygame.draw as drw
 import pygame.color as cl
 import pygame.math as pm
-import source.cue_ball
+from numpy import Inf
+
 
 class Stick(sp.Sprite):
     '''
@@ -29,6 +30,8 @@ class Stick(sp.Sprite):
         self.next_update_time = 0
         
         self.max_dist = 200
+        
+        self.prev_midpoint_dist = Inf
         
     def new_cb_vel(self, ball_coords, mouse_pos):
         '''
@@ -204,18 +207,26 @@ class Stick(sp.Sprite):
         everything is passed by reference, the False return should make 
         pool_table.play_stick_animation false.
         '''
-        #Doesnt work. I believe the issue lies in the ordering of events in pool_table.
+        
         direction = pm.Vector2(cue_ball_pos) - pm.Vector2(mouse_pos_on_click) + self.offset
+        
+        if direction.length() == 0:
+            return False
+        
         direction.scale_to_length(5)
         
         disp_surf_cue_ball_pos = self.offset + cue_ball_pos
         
         midpoint = (self.cue_tip_pts[2] + self.cue_tip_pts[3]) / 2
         
-        if midpoint.distance_to(disp_surf_cue_ball_pos) <= 5:
+        curr_midpoint_dist = midpoint.distance_to(disp_surf_cue_ball_pos)
+        
+        if curr_midpoint_dist > self.prev_midpoint_dist:
+            self.prev_midpoint_dist = Inf
             return False
         else:
             
+            self.prev_midpoint_dist = curr_midpoint_dist
             
             for pt in self.cue_tip_pts:
                 pt += direction
