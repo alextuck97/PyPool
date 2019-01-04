@@ -13,7 +13,7 @@ class PoolBall(pygame.sprite.Sprite):
         self.radius = 8
         #if PoolBall.image is None:
         if PoolBall.font is None:
-            PoolBall.font = fn.Font('CENTURY.ttf', 9)
+            PoolBall.font = fn.Font('resources/CENTURY.ttf', 9)
         
         BALL_IMG = pygame.Surface([2*self.radius,2*self.radius], pygame.SRCALPHA)
         NUM_IMG = pygame.Surface([(self.radius *3) // 2, (self.radius *3) // 2], pygame.SRCALPHA)

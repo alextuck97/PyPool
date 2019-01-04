@@ -1,5 +1,5 @@
-from menu import Menu
-from text_display import TextDisplay
+from source.menu import Menu
+from source.text_display import TextDisplay
 import pygame.mouse as ms
 from pygame import MOUSEBUTTONDOWN
 import pygame
@@ -15,7 +15,7 @@ class AboutScreen(Menu):
         
         
         
-        self.game_rules = self.initialize_instructions("how_to_play.txt")
+        self.game_rules = self.initialize_instructions("resources/how_to_play.txt")
         
         self.about = TextDisplay(self.fonts["stencil_30"], "About")
         self.about_size = self.about.get_message().get_size()

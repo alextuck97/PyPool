@@ -1,6 +1,6 @@
 import pygame
-import state_stack as ss
-import pool_table
+import source.state_stack as ss
+
 
 class App:
     def __init__(self):
@@ -23,11 +23,11 @@ class App:
         self._running = True
         
         if pygame.font.get_init():
-            self.font_dict["stencil_50"] = pygame.font.Font("STENCIL.ttf",50)
-            self.font_dict["stencil_30"] = pygame.font.Font("STENCIL.ttf",30)
-            self.font_dict["stencil_20"] = pygame.font.Font("STENCIL.ttf",20)
-            self.font_dict["century_30"] = pygame.font.Font("CENTURY.ttf",30)
-            self.font_dict["century_15"] = pygame.font.Font("CENTURY.ttf",15)
+            self.font_dict["stencil_50"] = pygame.font.Font("resources/STENCIL.ttf",50)
+            self.font_dict["stencil_30"] = pygame.font.Font("resources/STENCIL.ttf",30)
+            self.font_dict["stencil_20"] = pygame.font.Font("resources/STENCIL.ttf",20)
+            self.font_dict["century_30"] = pygame.font.Font("resources/CENTURY.ttf",30)
+            self.font_dict["century_15"] = pygame.font.Font("resources/CENTURY.ttf",15)
             #self.font = pygame.font.Font("STENCIL.ttf",50)
         
         self.state_stack.set_font(self.font_dict)

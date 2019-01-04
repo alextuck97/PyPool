@@ -1,7 +1,7 @@
 import pygame.mouse as ms
-from menu import Menu
+from source.menu import Menu
 from pygame import MOUSEBUTTONDOWN
-from text_display import TextDisplay
+from source.text_display import TextDisplay
 
 
 class MainMenu(Menu):

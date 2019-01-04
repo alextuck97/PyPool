@@ -1,8 +1,9 @@
 import queue as q
-import pool_table as pt
-import main_menu as mm
-import about_screen as ab
-import end_menu as em
+
+import source.pool_table as pt
+import source.main_menu as mm
+import source.about_screen as ab
+import source.end_menu as em
 import pygame.event as ev
 from pygame import QUIT
 

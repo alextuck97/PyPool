@@ -1,5 +1,5 @@
 import pygame.math as pm
-import pool_ball as pb
+import source.pool_ball as pb
 
 class CueBall(pb.PoolBall):
     image = None

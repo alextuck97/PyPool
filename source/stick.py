@@ -3,7 +3,7 @@ import pygame.mouse as ms
 import pygame.draw as drw
 import pygame.color as cl
 import pygame.math as pm
-import cue_ball
+import source.cue_ball
 
 class Stick(sp.Sprite):
     '''

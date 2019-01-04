@@ -1,5 +1,5 @@
-from menu import Menu
-from text_display import TextDisplay
+from source.menu import Menu
+from source.text_display import TextDisplay
 import pygame.mouse as ms
 from pygame import MOUSEBUTTONDOWN
 import os
@@ -98,7 +98,7 @@ class EndMenu(Menu):
         '''
         Read through how_to_play.txt to find low score
         '''
-        file = open("how_to_play.txt", "r")
+        file = open("resources/how_to_play.txt", "r")
         
         line = None
         
@@ -116,8 +116,8 @@ class EndMenu(Menu):
         '''
         Modify how_to_play_txt with new low score
         '''
-        original = open("how_to_play.txt", "r")
-        new_file = open("temp.txt", "w")
+        original = open("resources/how_to_play.txt", "r")
+        new_file = open("resources/temp.txt", "w")
         
         for line in original:
             if line != "###\n":
@@ -131,8 +131,8 @@ class EndMenu(Menu):
         original.close()
         new_file.close()
         
-        os.remove("how_to_play.txt")
-        os.rename("temp.txt", "how_to_play.txt")
+        os.remove("resources/how_to_play.txt")
+        os.rename("resources/temp.txt", "resources/how_to_play.txt")
         
         
         

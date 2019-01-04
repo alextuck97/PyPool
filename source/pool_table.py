@@ -4,11 +4,11 @@ import pygame.math as pm
 import pygame.mouse as ms
 import pygame
 import numpy as np
-from stick import Stick
-from cue_ball import CueBall
-from pocket import Pocket
-from pool_ball import PoolBall
-from text_display import TextDisplay
+from source.stick import Stick
+from source.cue_ball import CueBall
+from source.pocket import Pocket
+from source.pool_ball import PoolBall
+from source.text_display import TextDisplay
 from pygame.sprite import Group
 
 
