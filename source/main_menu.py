@@ -29,9 +29,15 @@ class MainMenu(Menu):
         self.about_x = (self.surf_wid - self.about_size[0])//2
         self.about_y = self.surf_hgt //2
         
+        self.quit = TextDisplay(self.fonts["stencil_30"], "Quit")
+        self.quit_size = self.quit.get_message().get_size()
+        self.q_x = (self.surf_wid - self.quit_size[0])//2
+        self.q_y = self.surf_hgt *3 // 5
+        
         self.title.display()
         self.play.display()
         self.about.display()
+        self.quit.display()
         
         self.hiscores = font_dict["stencil_30"].render("Hi-Scores", False, (255,0,0))
         
@@ -43,6 +49,7 @@ class MainMenu(Menu):
         
         self.update_color(mouse_pos, self.play, self.play_x, self.play_y, self.play_size)
         self.update_color(mouse_pos, self.about, self.about_x, self.about_y, self.about_size)
+        self.update_color(mouse_pos,self.quit, self.q_x, self.q_y, self.quit_size)
         
         
         return False
@@ -57,6 +64,7 @@ class MainMenu(Menu):
         self.title.draw(display_surface, (self.title_x,self.title_y))
         self.play.draw(display_surface, (self.play_x,self.play_y))
         self.about.draw(display_surface, (self.about_x,self.about_y))
+        self.quit.draw(display_surface, (self.q_x,self.q_y))
         
         
         
@@ -74,6 +82,9 @@ class MainMenu(Menu):
             
             if self.check_click(mouse_pos, self.about_x, self.about_y, self.about_size):
                 event_queue.put("PUSH_ABOUT")
+            
+            if self.check_click(mouse_pos, self.q_x, self.q_y, self.quit_size):
+                event_queue.put("QUIT")
             
             
         

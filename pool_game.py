@@ -20,6 +20,7 @@ class App:
     def on_init(self):
         pygame.init()
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
+        pygame.display.set_caption("PyPool")
         self._running = True
         
         if pygame.font.get_init():

@@ -45,10 +45,17 @@ class EndMenu(Menu):
             self.ls_x = (self.surf_wid - self.ls_size[0])//2
             self.ls_y = self.surf_hgt *2//3
                 
+        
+        self.exit = TextDisplay(self.fonts["stencil_20"], "Exit to Main Menu")
+        self.exit_size = self.exit.get_message().get_size()
+        self.exit_x = (self.surf_wid - self.exit_size[0])//2
+        self.exit_y = self.surf_hgt * 4 //5
+        
         self.game_over.display()
         self.play_again.display()
         self.quit.display()
         self.ls_message.display()
+        self.exit.display()
         
         self.set_low_score()
         
@@ -59,6 +66,7 @@ class EndMenu(Menu):
         self.play_again.draw(display_surface, (self.pa_x, self.pa_y))
         self.quit.draw(display_surface, (self.q_x, self.q_y))
         self.ls_message.draw(display_surface, (self.ls_x, self.ls_y))
+        self.exit.draw(display_surface, (self.exit_x, self.exit_y))
 
     
     def update(self,time, event_queue):
@@ -69,7 +77,7 @@ class EndMenu(Menu):
         
         self.update_color(mouse_pos, self.play_again, self.pa_x, self.pa_y, self.pa_size)
         self.update_color(mouse_pos, self.quit, self.q_x, self.q_y, self.q_size)
-        
+        self.update_color(mouse_pos, self.exit, self.exit_x, self.exit_y, self.exit_size)
         
         
         
@@ -90,6 +98,10 @@ class EndMenu(Menu):
             
             if self.check_click(mouse_pos, self.q_x, self.q_y, self.q_size):
                 event_queue.put("QUIT")
+                
+            if self.check_click(mouse_pos, self.exit_x, self.exit_y, self.exit_size):
+                event_queue.put("POP")
+                event_queue.put("POP")
             
         return False
     

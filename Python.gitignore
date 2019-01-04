@@ -72,6 +72,9 @@ docs/_build/
 # PyBuilder
 target/
 
+#Pydev
+.pydevproject
+
 # Jupyter Notebook
 .ipynb_checkpoints
 
@@ -103,6 +106,9 @@ venv.bak/
 
 # Rope project settings
 .ropeproject
+
+# Eclipse project settings
+.project
 
 # mkdocs documentation
 /site
